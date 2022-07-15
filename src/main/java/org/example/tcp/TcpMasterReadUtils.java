@@ -2,7 +2,6 @@ package org.example.tcp;
 
 import com.serotonin.modbus4j.BatchRead;
 import com.serotonin.modbus4j.BatchResults;
-import com.serotonin.modbus4j.ModbusFactory;
 import com.serotonin.modbus4j.ModbusMaster;
 import com.serotonin.modbus4j.code.DataType;
 import com.serotonin.modbus4j.exception.ErrorResponseException;
@@ -10,10 +9,7 @@ import com.serotonin.modbus4j.exception.ModbusInitException;
 import com.serotonin.modbus4j.exception.ModbusTransportException;
 import com.serotonin.modbus4j.ip.IpParameters;
 import com.serotonin.modbus4j.locator.BaseLocator;
-import com.serotonin.modbus4j.serial.SerialPortWrapper;
-import gnu.io.SerialPort;
 import org.example.ModbusUtil;
-import org.example.rtu.SerialPortWrapperImpl;
 
 /**
  * modbus通讯工具类,采用modbus4j实现
@@ -22,7 +18,7 @@ import org.example.rtu.SerialPortWrapperImpl;
  * @dependencies modbus4j-3.0.3.jar
  * @website https://github.com/infiniteautomation/modbus4j
  */
-public class Modbus4jUtils {
+public class TcpMasterReadUtils {
 
     /**
      * 获取master
@@ -34,10 +30,7 @@ public class Modbus4jUtils {
         IpParameters params = new IpParameters();
         params.setHost("localhost");
         params.setPort(502);
-        //
-        // modbusFactory.createRtuMaster(wapper); //RTU 协议
-        // modbusFactory.createUdpMaster(params);//UDP 协议
-        // modbusFactory.createAsciiMaster(wrapper);//ASCII 协议
+
         ModbusMaster master = ModbusUtil.modbusFactory.createTcpMaster(params, false);// TCP 协议
         master.init();
 
@@ -146,8 +139,8 @@ public class Modbus4jUtils {
 
         BatchRead<Integer> batch = new BatchRead<Integer>();
 
-        batch.addLocator(0, BaseLocator.holdingRegister(1, 1, DataType.FOUR_BYTE_FLOAT));
-        batch.addLocator(1, BaseLocator.inputStatus(1, 0));
+        batch.addLocator(0, BaseLocator.holdingRegister(1, 0, DataType.TWO_BYTE_BCD));
+        batch.addLocator(1, BaseLocator.holdingRegister(1, 1, DataType.TWO_BYTE_BCD));
 
         ModbusMaster master = getMaster();
 
@@ -191,7 +184,7 @@ public class Modbus4jUtils {
             System.out.println("v041:" + v041);
             System.out.println("v042:" + v042);*/
             // 批量读取
-//            batchRead();
+            batchRead();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -30,28 +30,28 @@ public class RtuMasterTest {
         int slaveId = 1;
 
         // 读取保持寄存器
-//        readHoldingRegisters(master, slaveId, 0, 3);
-//        // 将地址为0的保持寄存器数据修改为0
-//        writeRegister(master, slaveId, 0, 1);
-//        // 再读取保持寄存器
-//        readHoldingRegisters(master, slaveId, 0, 3);
+        readHoldingRegisters(master, slaveId, 0, 3);
+        // 将地址为0的保持寄存器数据修改为0
+        writeRegister(master, slaveId, 0, 1);
+        // 再读取保持寄存器
+        readHoldingRegisters(master, slaveId, 0, 3);
 
-        readDiscreteInputs(master, slaveId, 0, 3);
-    }
-
-    private static void readHoldingRegisters(ModbusMaster master, int slaveId, int start, int len) throws Exception{
-        ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest(slaveId, start, len);
-        ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) master.send(request);
-        if (response.isException()){
-            System.out.println("读取保持寄存器错误，错误信息是" + response.getExceptionMessage());
-        }else {
-            System.out.println("读取保持寄存器=" + Arrays.toString(response.getShortData()));
-        }
+        readDiscreteInputs(master, slaveId, 0, 1);
     }
 
     private static void readDiscreteInputs(ModbusMaster master, int slaveId, int start, int len) throws Exception{
         ReadDiscreteInputsRequest request = new ReadDiscreteInputsRequest(slaveId, start, len);
         ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) master.send(request);
+        if (response.isException()){
+            System.out.println("读取离散量输入错误，错误信息是" + response.getExceptionMessage());
+        }else {
+            System.out.println("读取离散量输入=" + Arrays.toString(response.getBooleanData()));
+        }
+    }
+
+    private static void readHoldingRegisters(ModbusMaster master, int slaveId, int start, int len) throws Exception{
+        ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest(slaveId, start, len);
+        ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) master.send(request);
         if (response.isException()){
             System.out.println("读取保持寄存器错误，错误信息是" + response.getExceptionMessage());
         }else {
